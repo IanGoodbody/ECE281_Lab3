@@ -63,6 +63,18 @@ Modified: Ln 46
 
   	sel_reg <= "1110";
   	
+After the process a type mismatch occured in setting "next_count" variable. The program checks if "count_reg" is 
+equivlent to "TICKS_IN_MS", which compares an unsigned number to an integer. The situation was rectified using an 
+to_integer conversion
+
+Original: Ln 61
+
+	count_next <= (others => '0') when count_reg = TICKS_IN_MS else
+	
+Modified: Ln 58
+
+	count_next <= (others => '0') when to_integer(count_reg) = TICKS_IN_MS else
+
 Line 86 in the second process statement was deemed redundant and removed as the state_next signal would later be set in
 the case statement.
 
