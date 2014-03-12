@@ -58,7 +58,7 @@ begin
 
 	--Reset the counter if it has been maxed out
 	--Otherwise count up one on every lock cycle (with a change in count_reg)
-	count_next <= (others => '0') when to_integer(count_reg) = TICKS_IN_MS else
+	count_next <= (others => '0') when count_reg = TICKS_IN_MS else
 	              count_reg + 1;
 	
 	--Should set all the next values
