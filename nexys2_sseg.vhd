@@ -26,10 +26,10 @@ architecture behavioral of nexys2_sseg is
 	constant TICKS_IN_MS : integer := CLOCK_IN_HZ / 1E3;
 	
 	type state_type is (s0, s1, s2, s3);
-	signal state_reg, state_next : state_type;
+	signal state_reg, state_next : state_type := S0;
 	signal count_reg, count_next : unsigned(20 downto 0) := (others => '0');
 	signal sseg_reg, sseg_next : std_logic_vector(7 downto 0) := (others => '0');
-	signal sel_reg, sel_next : std_logic_vector(3 downto 0) := (others => '1');
+	signal sel_reg, sel_next : std_logic_vector(3 downto 0) := "1110");
 begin
 	--Sets the output conditions to unsigned values
 	--Will remain that way until the system is reset
@@ -61,8 +61,6 @@ begin
 	--Should set all the next values
 	process (state_reg, count_reg) is
 	begin
-		--state_next is set twice in this proces
-		state_next <= state_reg;
 		
 		if count_reg = TICKS_IN_MS then
 			--Move up a floor every 50,000 clock cycles, then go from floor 4 to 1
