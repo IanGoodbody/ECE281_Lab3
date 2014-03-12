@@ -1,0 +1,41 @@
+NET "btn(3)" LOC = H13;
+NET "btn(2)" LOC = E18;
+NET "btn(1)" LOC = D18;
+NET "btn(0)" LOC = B18;
+
+NET "SSEG_AN(0)" LOC = F17;
+NET "SSEG_AN(1)" LOC = H17;
+NET "SSEG_AN(2)" LOC = C18;
+NET "SSEG_AN(3)" LOC = F15;
+
+NET "SSEG(7)" LOC = C17;
+NET "SSEG(6)" LOC = L18;
+NET "SSEG(5)" LOC = F18;
+NET "SSEG(4)" LOC = D17;
+NET "SSEG(3)" LOC = D16;
+NET "SSEG(2)" LOC = G14;
+NET "SSEG(1)" LOC = J17;
+NET "SSEG(0)" LOC = H14;
+
+NET "switch(7)" LOC=R17;
+NET "switch(6)" LOC=N17;
+NET "switch(5)" LOC=L13;
+NET "switch(4)" LOC=L14;
+NET "switch(3)" LOC=K17;
+NET "switch(2)" LOC=K18;
+NET "switch(1)" LOC=H18;
+NET "switch(0)" LOC=G18;
+
+NET "led(7)" LOC=R4;
+NET "led(6)" LOC=F4;
+NET "led(5)" LOC=P15;
+NET "led(4)" LOC=E17;
+NET "led(3)" LOC=K14;
+NET "led(2)" LOC=K15;
+NET "led(1)" LOC=J15;
+NET "led(0)" LOC=J14;
+
+NET "clk_50m" LOC=B8;
+NET "clk_50m" PERIOD = 20 ns;
+#OFFSET = IN 10 ns BEFORE "clk";
+#OFFSET = OUT 10 ns BEFORE "clk";
