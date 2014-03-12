@@ -27,6 +27,7 @@ architecture behavioral of nexys2_sseg is
 	constant TICKS_IN_MS : integer := CLOCK_IN_HZ / 1E3;
 	
 	type state_type is (s0, s1, s2, s3);
+	--Must declare signals -See line 45
 	signal state_reg, state_next : state_type;
 	signal count_reg, count_next : unsigned(20 downto 0) := (others => 'U');
 	signal sseg_reg, sseg_next : std_logic_vector(7 downto 0) := (others => 'U');
@@ -41,6 +42,7 @@ begin
 	begin
 		if rising_edge(clk) then
 			if reset = '1' then --Reset everything
+				--Note reset is tied to ground, values must be declared
 				count_reg <= (others => '0');
 				state_reg <= s0;
 				sseg_reg <= (others => '0');
@@ -54,9 +56,9 @@ begin
 		end if;
 	end process;
 
-	--Reset the counter if it has been maxed out, data type issues
+	--Reset the counter if it has been maxed out
 	--Otherwise count up one on every lock cycle (with a change in count_reg)
-	count_next <= (others => '0') when count_reg = TICKS_IN_MS else
+	count_next <= (others => '0') when to_integer(count_reg) = TICKS_IN_MS else
 	              count_reg + 1;
 	
 	--Should set all the next values

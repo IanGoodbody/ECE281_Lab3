@@ -27,9 +27,9 @@ architecture behavioral of nexys2_sseg is
 	
 	type state_type is (s0, s1, s2, s3);
 	signal state_reg, state_next : state_type;
-	signal count_reg, count_next : unsigned(20 downto 0) := (others => 'U');
-	signal sseg_reg, sseg_next : std_logic_vector(7 downto 0) := (others => 'U');
-	signal sel_reg, sel_next : std_logic_vector(3 downto 0) := (others => 'U');
+	signal count_reg, count_next : unsigned(20 downto 0) := (others => '0');
+	signal sseg_reg, sseg_next : std_logic_vector(7 downto 0) := (others => '0');
+	signal sel_reg, sel_next : std_logic_vector(3 downto 0) := (others => '1');
 begin
 	--Sets the output conditions to unsigned values
 	--Will remain that way until the system is reset
