@@ -1,3 +1,8 @@
+--This module updates the seven segement display codes
+--Author: Captain Silva
+--Editor: Ian Goodbody
+--Company: USAFA
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
