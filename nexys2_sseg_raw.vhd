@@ -2,6 +2,7 @@
 --Author: Captain Silva
 --Editor: Ian Goodbod
 --Company: USAFA
+--This file is the origional "bad" code, the updated code is in file nexys2_sseg.vhd
 
 library ieee;
 use ieee.std_logic_1164.all;
