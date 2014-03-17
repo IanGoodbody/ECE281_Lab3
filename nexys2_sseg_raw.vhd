@@ -8,7 +8,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity nexys2_sseg is
+entity nexys2_sseg_raw is
 	--No value for the generic object, must be given in the complent declartation
 	--Would not hurt to define it here though
 	generic ( CLOCK_IN_HZ : integer );
@@ -20,7 +20,7 @@ entity nexys2_sseg is
 		   sseg3 : in std_logic_vector(7 downto 0);
 		   sel   : out std_logic_vector(3 downto 0); -- Select sseg channel (active low) --
 		   sseg  : out std_logic_vector(7 downto 0)); -- Output data
-end nexys2_sseg;
+end nexys2_sseg_raw;
 
 architecture behavioral of nexys2_sseg is
 	--With 50MHz clock, there will be a 50,000 tick clock and 1 ms

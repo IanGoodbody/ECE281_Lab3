@@ -10,7 +10,7 @@ use ieee.numeric_std.all;
 entity nexys2_sseg is
 	--No value for the generic object, must be given in the complent declartation
 	--Would not hurt to define it here though
-	generic ( CLOCK_IN_HZ : integer := 50E6);
+	generic ( CLOCK_IN_HZ : integer);
 	port ( clk   : in std_logic; -- 50 MHz clock
 	       reset : in std_logic;
 		   sseg0 : in std_logic_vector(7 downto 0);
@@ -29,7 +29,7 @@ architecture behavioral of nexys2_sseg is
 	signal state_reg, state_next : state_type := S0;
 	signal count_reg, count_next : unsigned(20 downto 0) := (others => '0');
 	signal sseg_reg, sseg_next : std_logic_vector(7 downto 0) := (others => '0');
-	signal sel_reg, sel_next : std_logic_vector(3 downto 0) := "1110");
+	signal sel_reg, sel_next : std_logic_vector(3 downto 0) := "1110";
 begin
 	--Sets the output conditions to unsigned values
 	--Will remain that way until the system is reset

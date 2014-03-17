@@ -52,8 +52,9 @@ architecture Behavioral of Nexys2_top_shell is
 --Outputs: 7-segment display select signal (4-bit) called "sel", 
 --         8-bit signal called "sseg" containing 7-segment data routed off-chip
 ---------------------------------------------------------------------------------------------
-	COMPONENT nexys2_sseg
-	GENERIC ( CLOCK_IN_HZ : integer );
+	
+COMPONENT nexys2_sseg
+	GENERIC ( CLOCK_IN_HZ : integer := 50E6);
 	PORT(
 		clk : IN std_logic;
 		reset : IN std_logic;
@@ -65,7 +66,6 @@ architecture Behavioral of Nexys2_top_shell is
 		sseg : OUT std_logic_vector(7 downto 0)
 		);
 	END COMPONENT;
-
 -------------------------------------------------------------------------------------
 --This component divides the system clock into a bunch of slower clock speeds
 --Input: system clock 
@@ -78,6 +78,7 @@ architecture Behavioral of Nexys2_top_shell is
 		clockbus : OUT std_logic_vector(26 downto 0)
 		);
 	END COMPONENT;
+	
 
 -------------------------------------------------------------------------------------
 --Below are declarations for signals that wire-up this top-level module.
@@ -91,21 +92,77 @@ signal ClockBus_sig : STD_LOGIC_VECTOR (26 downto 0);
 --------------------------------------------------------------------------------------
 --Insert your design's component declaration below	
 --------------------------------------------------------------------------------------
+-----------------------------------------------
+--Moore Machine declaration
+---------------------------
+--COMPONENT MooreElevatorController
+--	Port(
+--		clk : IN std_logic;
+--		reset : IN std_logic;
+--		stop : IN std_logic;
+--		up_down : IN std_logic;          
+--		floor : OUT std_logic_vector(3 downto 0)
+--		);
+--	END COMPONENT;
+------------------------------------------------
 
+-------------------------------------------------
+--Mealy Machine declaration
+---------------------------
+--COMPONENT MealyElevatorController
+--	Port(
+--		clk : IN std_logic;
+--		reset : IN std_logic;
+--		stop : IN std_logic;
+--		up_down : IN std_logic;          
+--		floor : OUT std_logic_vector(3 downto 0);
+--		nextfloor : OUT std_logic_vector(3 downto 0)
+--		);
+--	END COMPONENT;
+----------------------------------------------------
 
+----------------------------------------------------
+--Prime input declaration
+--------------------------
+--COMPONENT PrimeElevatorController
+--	PORT(
+--		clk : IN std_logic;
+--		reset : IN std_logic;
+--		stop : IN std_logic;
+--		up_down : IN std_logic;          
+--		floor : OUT std_logic_vector(7 downto 0)
+--		);
+--	END COMPONENT;
+----------------------------------------------------
+
+----------------------------------------------------	
+--Different input declaration
+-----------------------------
+COMPONENT DiffInputElevatorController
+	PORT(
+		clk : IN std_logic;
+		reset : IN std_logic;
+		go : IN std_logic;
+		target : IN std_logic_vector(3 downto 0);          
+		floor : OUT std_logic_vector(7 downto 0)
+		);
+	END COMPONENT;
+---------------------------------------------------
 
 --------------------------------------------------------------------------------------
 --Insert any required signal declarations below
 --------------------------------------------------------------------------------------
 
-
+signal up_down_ind, stop_ind : std_logic; --Allows the up or down data to be written to a bit as well as read froma  swich
+signal floor_out : std_logic_vector(7 downto 0);
 
 begin
 
 ----------------------------
 --code below tests the LEDs:
 ----------------------------
-LED <= CLOCKBUS_SIG(26 DOWNTO 19);
+--LED <= CLOCKBUS_SIG(26 DOWNTO 19);
+LED <= "00000000";
 
 --------------------------------------------------------------------------------------------	
 --This code instantiates the Clock Divider. Reference the Clock Divider Module for more info
@@ -125,10 +182,77 @@ LED <= CLOCKBUS_SIG(26 DOWNTO 19);
 --		  Example: if you are not using 7-seg display #3 set nibble3 to "0000"
 --------------------------------------------------------------------------------------
 
-nibble0 <= 
-nibble1 <= 
-nibble2 <= 
-nibble3 <= 
+--Code contains the elevator controller
+
+-----------------------------------------------
+--------------------------------
+--Moore Elevator Controller Instantiation
+--------------------------------
+--	Cont_Unit: MooreElevatorController PORT MAP(
+--		clk => ClockBus_sig(25),
+--		reset => btn(3),
+--		stop => switch(0),
+--		up_down => switch(1),
+--		floor => nibble0
+--	);	
+--
+--nibble1 <= "0000";
+--nibble2 <= "0000";
+--nibble3 <= "0000";
+------------------------------------------------
+
+--------------------------------------------
+-----------------------
+--Mealy Controller Instantiation
+-----------------------
+--Cont_Unit: MealyElevatorController PORT MAP(
+--		clk => ClockBus_sig(25),
+--		reset => btn(3),
+--		stop => switch(0),
+--		up_down => switch(1),
+--		floor => nibble0,
+--		nextfloor => nibble2
+--	);
+--	
+--nibble1 <= "0000";
+--nibble3 <= "0000";
+--------------------------------------------
+
+--------------------------------------------
+--------------------------------------
+--Prime Floor Controller Instantiation
+--------------------------------------
+--	Cont_Unit: PrimeElevatorController PORT MAP(
+--		clk => ClockBus_sig(25),
+--		reset => btn(3),
+--		stop => switch(0),
+--		up_down => switch(1),
+--		floor => floor_out
+--	);	
+--
+----Need to convert floor_out to decimal, easiest to do so in the controller output 
+--nibble0 <= floor_out(3 downto 0);
+--nibble1 <= floor_out(7 downto 4);
+--nibble2 <= "0000";
+--nibble3 <= "0000";
+--------------------------------------------
+
+---------------------------------------------
+------------------------------------------
+--Different Input Controller Instantiation
+------------------------------------------
+	Cont_Unit: DiffInputElevatorController PORT MAP(
+		clk => ClockBus_sig(25),
+		reset => btn(3),
+		go => btn(0),
+		target => switch(3 downto 0),
+		floor => floor_out
+	);	
+
+nibble0 <= floor_out(3 downto 0);
+nibble1 <= "0000";
+nibble2 <= switch(3 downto 0);
+nibble3 <= "0000";
 
 --This code converts a nibble to a value that can be displayed on 7-segment display #0
 	sseg0: nibble_to_sseg PORT MAP(
@@ -159,7 +283,7 @@ nibble3 <=
 	generic map ( CLOCK_IN_HZ => 50E6 )
 	PORT MAP(
 		clk => clk_50m,
-		reset => '0',
+		reset => btn(3),
 		sseg0 => sseg0_sig,
 		sseg1 => sseg1_sig,
 		sseg2 => sseg2_sig,
