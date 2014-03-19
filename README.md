@@ -149,18 +149,20 @@ validate that the modified code could be effectively synthesized without major b
 
 ### Main Lab
 
-The goal of the main lab was to create a fully functional elevator controller. Implementing the full design required importing the elevator controls circuits from CE3.
+The goal of the main lab was to create a fully functional elevator controller using the control circuits created in Computer Exercise 3.
 
 For the design and testing of these different models, the original, unmodified nexys2_sseg.vhd code was used, as it had functional errors than my modified and edited version. Strangely, the IDE used the code in the file nexys2 _sseg _raw.vhd to build the machine, therefor the code was left as such when submitted to github.
 
 The Moore Machine was implemented using an up/down and stop control inputs which were then wired to the input switches. The output counter was routed to the rightmost digit while the other three nibbles and seven segment outputs were set to zero. The machine was tested by switching the up_down switch on, allowing the machine to count from floor 1 to floor 4 while intermittently testing the stop switch (the numbers stopped counting when the switch was on), then switching the up _down switch off (direction down) then allowing the counter to return from 4 to 1.
 
-The Mealy machine was implemented with the same basic framework as the Moore, except the next_floor output was wired to a different seven segment display. This machine was tested similar to that of the Moore with the addition of checking that the next _floor output was correct. While the machine was cycling up and down the stop input was tested to make sure the machine stopped counting when prompted, and the up _down switch was tested to ensure that the next floor output changed appropriately. On the "top " and "bottom" floors the next floor output gave only the next logical step per its design.
+The Mealy machine was implemented with the same basic framework as the Moore, except the next_floor output was wired to a different seven segment display. This machine was tested similarly to that of the Moore with the addition of checking that the next _floor output was correct. While the machine was cycling up and down the stop input was tested to make sure the machine stopped counting when prompted, and the up _down switch was tested to ensure that the next floor output changed appropriately. On the "top " and "bottom" floors the next floor output gave either the current floor, indicating that there were no more possible moves in that direction, or the only logical next move either up or down.
 
 The Prime counter was built off of the Moore machine and was tested in an identical manner, provided that the design only cycled through prime numbers. The prime counter implementation was unique in that it had to display multiple decimal digits from a binary output. This was accomplished by making the output of the PrimeElevatorController correspond to a decimal number whee each nibble of the output represented the appropriate decimal digit. This method translated very easily to the seven segment display as the controller output simply had to be split and routed to two different segment displays.
 
-The final Design was binary input controller. This design was based off of the Moore machine, but was to read a binary input for the floor then move to that floor. The design was implemented by using the current floor of the elevator and the target floor to determine stop and up_down parameters, allowing for maximum code reuse. The binary input was routed directly to one of the seven segment displays to ease testing.
+The next design utalized a binary input to control the movement of the elevator. The design was structured off of the origional moore elevator controller design, but in stead of using signals to determine direction, the comparable properties of enumerated floor_ state_type which allows the software to determine if the "current" floor was "above," "below," or "on" the "target" floor. These conditions were then used to determine the movement of the elevaator. The top module was then configured to display the target floor as well as the current floor on the seven segment display to allow for easier testing.
 
-Unfortunately the testing phase of this last machine ultimately failed. While the numbers would perpetually count towards their target, the stop signal seems never to be triggered which cased the "elevator" to oscillate one floor above and below the target. Impending sunrise ultimately terminated continued work on the project.
+The Design was tested by spot checking arbitrary floor values between 0 and 7, ensuring that the "target floor" output read as it was designed, then checking that the "current floor" display counted either up or down to the target floor.
+
+Finally, the directional light functionality was 
 
 Documentation: None
