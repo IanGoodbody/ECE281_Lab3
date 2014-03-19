@@ -22,7 +22,7 @@ entity nexys2_sseg_raw is
 		   sseg  : out std_logic_vector(7 downto 0)); -- Output data
 end nexys2_sseg_raw;
 
-architecture behavioral of nexys2_sseg is
+architecture behavioral of nexys2_sseg_raw is
 	--With 50MHz clock, there will be a 50,000 tick clock and 1 ms
 	constant TICKS_IN_MS : integer := CLOCK_IN_HZ / 1E3;
 	

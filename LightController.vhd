@@ -12,8 +12,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
-
-
 entity LightController is
     Port ( clk : in STD_LOGIC;
 			  up_down : in  STD_LOGIC;

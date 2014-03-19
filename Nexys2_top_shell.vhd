@@ -53,7 +53,7 @@ architecture Behavioral of Nexys2_top_shell is
 --         8-bit signal called "sseg" containing 7-segment data routed off-chip
 ---------------------------------------------------------------------------------------------
 	
-COMPONENT nexys2_sseg
+COMPONENT nexys2_sseg_raw
 	GENERIC ( CLOCK_IN_HZ : integer := 50E6);
 	PORT(
 		clk : IN std_logic;
@@ -336,7 +336,7 @@ begin
 	);
 	
 --This module is responsible for managing the 7-segment displays, you don't need to do anything here
-	nexys2_sseg_label: nexys2_sseg 
+	nexys2_sseg_label: nexys2_sseg_raw 
 	generic map ( CLOCK_IN_HZ => 50E6 )
 	PORT MAP(
 		clk => clk_50m,
