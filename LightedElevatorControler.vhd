@@ -19,14 +19,16 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity DiffInputElevatorController is
+entity LightedElevatorControler is
     Port ( clk : in  STD_LOGIC;
            reset : in  STD_LOGIC;
            target : in  STD_LOGIC_Vector (2 downto 0);
-           floor : out  STD_LOGIC_VECTOR (3 downto 0));
-end DiffInputElevatorController;
+           floor : out  STD_LOGIC_VECTOR (3 downto 0);
+			  up_down: out STD_LOGIC; --Indicates the direction of the elevator
+			  stop : out STD_LOGIC); --Says if the elevator is stopped
+end LightedElevatorControler;
 
-architecture Behavioral of DiffInputElevatorController is
+architecture Behavioral of LightedElevatorControler is
 
 --Below you create a new variable type! You also define what values that 
 --variable type can take on. Now you can assign a signal as 
@@ -68,7 +70,15 @@ begin
 			floor_state <= floor1;
 		--now we will code our next-state logic
 		else
-			--if (stop = '0') then 
+			if (floor_state < target_state) then
+				stop <= '0';
+				up_down <= '1';
+			elsif(floor_state > target_state)then
+				stop <= '0';
+				up_down <= '0';
+			else
+				stop <= '1';
+			end if;
 			case floor_state is
 				--when our current state is floor1
 				when floor1 =>

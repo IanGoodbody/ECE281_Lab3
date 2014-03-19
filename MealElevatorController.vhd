@@ -131,10 +131,10 @@ floor <= "0001" when (floor_state = floor1) else
 			"0100" when (floor_state = floor4) else
 			"0001";
 --The nextfloor output is dependent on the mealy machine inputs
-nextfloor <= "0001" when (floor_state = floor2 and up_down = '0') else
-				 "0010" when ((floor_state = floor1) or (floor_state = floor3 and up_down = '0')) else
-				 "0011" when ((floor_state = floor2 and up_down = '1') or (floor_state = floor4)) else
-				 "0100" when (floor_state = floor3 and up_down = '1') else
+nextfloor <= "0001" when ((floor_state = floor2 and up_down = '0') or (floor_state = floor1 and up_down = '0')) else
+				 "0010" when ((floor_state = floor1 and up_down = '1') or (floor_state = floor3 and up_down = '0')) else
+				 "0011" when ((floor_state = floor2 and up_down = '1') or (floor_state = floor4 and up_down = '0')) else
+				 "0100" when ((floor_state = floor3 and up_down = '1') or (floor_state = floor4 and up_down = '1')) else
 				 "0001";
 
 end Behavioral;

@@ -138,16 +138,41 @@ signal ClockBus_sig : STD_LOGIC_VECTOR (26 downto 0);
 ----------------------------------------------------	
 --Different input declaration
 -----------------------------
-COMPONENT DiffInputElevatorController
+--COMPONENT DiffInputElevatorController
+--	PORT(
+--		clk : IN std_logic;
+--		reset : IN std_logic;
+--		target : IN std_logic_vector(2 downto 0);          
+--		floor : OUT std_logic_vector(3 downto 0)
+--		);
+--	END COMPONENT;
+---------------------------------------------------
+
+---------------------------------------------------
+--Moving lights input declaration
+---------------------------------
+	COMPONENT LightedElevatorControler
 	PORT(
 		clk : IN std_logic;
 		reset : IN std_logic;
-		go : IN std_logic;
-		target : IN std_logic_vector(3 downto 0);          
-		floor : OUT std_logic_vector(7 downto 0)
+		target : IN std_logic_vector(2 downto 0);          
+		floor : OUT std_logic_vector(3 downto 0);
+		up_down : OUT std_logic;
+		stop : OUT std_logic
 		);
 	END COMPONENT;
----------------------------------------------------
+	
+	COMPONENT LightController
+	Port(
+		clk : IN std_logic;
+		up_down : IN std_logic;
+		stop : IN std_logic;
+		LED_Out : OUT std_logic_vector (7 downto 0)
+		);
+	END COMPONENT;
+	
+signal up_down, stop : std_logic; --Used for the lighted Controler LEDs
+----------------------------------------------------
 
 --------------------------------------------------------------------------------------
 --Insert any required signal declarations below
@@ -162,7 +187,7 @@ begin
 --code below tests the LEDs:
 ----------------------------
 --LED <= CLOCKBUS_SIG(26 DOWNTO 19);
-LED <= "00000000";
+--LED <= "00000000";
 
 --------------------------------------------------------------------------------------------	
 --This code instantiates the Clock Divider. Reference the Clock Divider Module for more info
@@ -241,18 +266,50 @@ LED <= "00000000";
 ------------------------------------------
 --Different Input Controller Instantiation
 ------------------------------------------
-	Cont_Unit: DiffInputElevatorController PORT MAP(
+--	Cont_Unit: DiffInputElevatorController PORT MAP(
+--		clk => ClockBus_sig(25),
+--		reset => btn(3),
+--		target => switch(2 downto 0),
+--		floor => floor_out(3 downto 0)
+--	);	
+--
+--floor_out(7 downto 4) <= "0000";
+--nibble0 <= floor_out(3 downto 0);
+--nibble1 <= "0000";
+--nibble2 <= "0000";
+--nibble3(2 downto 0) <= switch(2 downto 0);
+--nibble3(3) <= '0';
+----------------------------------------------
+
+----------------------------------------------------
+----------------------------------------
+--Moving lights Controller Instantiation
+----------------------------------------
+	Cont_Unit: LightedElevatorControler PORT MAP(
 		clk => ClockBus_sig(25),
 		reset => btn(3),
-		go => btn(0),
-		target => switch(3 downto 0),
-		floor => floor_out
-	);	
-
-nibble0 <= floor_out(3 downto 0);
-nibble1 <= "0000";
-nibble2 <= switch(3 downto 0);
-nibble3 <= "0000";
+		target => switch (2 downto 0),
+		floor => floor_out(3 downto 0),
+		up_down => up_down,
+		stop => stop
+	);
+	--Controls the LED sequencing
+	Light_cont: LightController PORT MAP(
+		clk => ClockBus_sig(22),
+		up_down => up_down,
+		stop => stop,
+		LED_out => LED
+	);
+	
+	floor_out(7 downto 4) <= "0000";
+	--Wrtie the SSEG outputs
+	nibble0 <= floor_out (3 downto 0);
+	nibble1 <= "0000";
+	nibble2 <= "0000";
+   nibble3(2 downto 0) <= switch(2 downto 0);
+	nibble3(3) <= '0';	 
+	
+----------------------------------------------------
 
 --This code converts a nibble to a value that can be displayed on 7-segment display #0
 	sseg0: nibble_to_sseg PORT MAP(
